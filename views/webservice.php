@@ -97,7 +97,10 @@ class WebserviceView extends Object {
 			header('Content-type: application/json');
 
 			header("X-JSON: " . $this->object($this->viewVars));
-
+			// check if callback is set and validate for alphanumeric & underscore to guard against xhr
+			if(isset($_GET['callback']) && if(preg_match('/^[A-Za-z0-9_]+$/',$_GET['callback']))) {
+				return $_GET['callback'].'('.$this->object($this->viewVars).');';
+			}
 			return $this->object($this->viewVars);
 		}
 		header('Content-type: application/xml');
